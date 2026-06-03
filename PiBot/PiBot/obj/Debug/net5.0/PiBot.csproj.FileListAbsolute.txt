@@ -1,0 +1,5 @@
+C:\Users\IainN\OneDrive\Desktop\Projects\PiBot\PiBot\obj\Debug\net5.0\PiBot.csproj.AssemblyReference.cache
+C:\Users\IainN\OneDrive\Desktop\Projects\PiBot\PiBot\obj\Debug\net5.0\PiBot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\IainN\OneDrive\Desktop\Projects\PiBot\PiBot\obj\Debug\net5.0\PiBot.AssemblyInfoInputs.cache
+C:\Users\IainN\OneDrive\Desktop\Projects\PiBot\PiBot\obj\Debug\net5.0\PiBot.AssemblyInfo.cs
+C:\Users\IainN\OneDrive\Desktop\Projects\PiBot\PiBot\obj\Debug\net5.0\PiBot.csproj.CoreCompileInputs.cache

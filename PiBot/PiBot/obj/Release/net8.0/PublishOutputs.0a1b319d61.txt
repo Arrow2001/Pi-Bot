@@ -1,0 +1,16 @@
+X:\Desktop\PiBot.exe
+X:\Desktop\PiBot.dll
+X:\Desktop\PiBot.deps.json
+X:\Desktop\PiBot.runtimeconfig.json
+X:\Desktop\PiBot.pdb
+X:\Desktop\Discord.Net.Commands.dll
+X:\Desktop\Discord.Net.Core.dll
+X:\Desktop\Discord.Net.Dave.dll
+X:\Desktop\Discord.Net.Interactions.dll
+X:\Desktop\Discord.Net.Rest.dll
+X:\Desktop\Discord.Net.Webhook.dll
+X:\Desktop\Discord.Net.WebSocket.dll
+X:\Desktop\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+X:\Desktop\Newtonsoft.Json.dll
+X:\Desktop\System.Device.Gpio.dll
+X:\Desktop\System.Linq.AsyncEnumerable.dll
