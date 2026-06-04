@@ -456,11 +456,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\IainN\\OneDrive\\Desktop\\Projects\\PiBot\\PiBot\\PiBot.csproj",
+      "projectUniqueName": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
       "projectName": "PiBot",
-      "projectPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Projects\\PiBot\\PiBot\\PiBot.csproj",
+      "projectPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
       "packagesPath": "C:\\Users\\IainN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Projects\\PiBot\\PiBot\\obj\\",
+      "outputPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
