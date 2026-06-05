@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Data.Sqlite;
 
 namespace PiBot.Commands
 {
@@ -45,6 +45,13 @@ namespace PiBot.Commands
                     break;
                 }
             }
+        }
+
+        // let users see their stored data (GDPR / Data Protection Act)
+        [Command("userdata")]
+        public async Task getUserData()
+        {
+            var db = new SqliteConnection("Data soure=");
         }
 
        
