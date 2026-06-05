@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "PiBot\\Commands\\LastFMCommands.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Commands\\LastFMCommands.cs*",
               "RelativeToolTip": "PiBot\\Commands\\LastFMCommands.cs*",
-              "ViewState": "AgIAABcAAAAAAAAAAAAtwC0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAYwGMAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-03T20:32:51.188Z",
               "EditorCaption": ""
@@ -66,9 +66,10 @@
               "RelativeDocumentMoniker": "PiBot\\Handlers\\EventHandler.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\EventHandler.cs",
               "RelativeToolTip": "PiBot\\Handlers\\EventHandler.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAA5wAoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T18:05:08.46Z"
+              "WhenOpened": "2026-03-27T18:05:08.46Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -80,7 +81,8 @@
               "RelativeToolTip": "PiBot\\Config.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAowA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T18:04:13.306Z"
+              "WhenOpened": "2026-03-27T18:04:13.306Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -92,7 +94,8 @@
               "RelativeToolTip": "PiBot\\Program.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAuwC8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T11:16:16.482Z"
+              "WhenOpened": "2026-03-27T11:16:16.482Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -55,6 +55,10 @@
               "target": "Package",
               "version": "[3.19.1, )"
             },
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[11.0.0-preview.4.26230.115, )"
+            },
             "System.Device.Gpio": {
               "target": "Package",
               "version": "[4.2.0, )"
