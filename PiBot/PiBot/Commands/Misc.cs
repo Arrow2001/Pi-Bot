@@ -51,7 +51,15 @@ namespace PiBot.Commands
         [Command("userdata")]
         public async Task getUserData()
         {
-            var db = new SqliteConnection("Data soure=");
+            var db = new SqliteConnection("Data source=C:\\Users\\IainN\\userdata.db");
+            db.Open();
+
+            using var getData = db.CreateCommand();
+            getData.CommandText = @"SELECT * FROM users WHERE id = @id";
+            getData.Parameters.AddWithValue("@id", Context.User.Id);
+
+            var userData = await getData.ExecuteNonQueryAsync(); // should look up the reader documentation
+            await Context.Channel.SendMessageAsync($"Data stored on you: {userData.ToString()}");
         }
 
        

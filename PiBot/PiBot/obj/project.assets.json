@@ -832,23 +832,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Nicho\\.nuget\\packages\\": {},
+    "C:\\Users\\IainN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nicho\\Desktop\\Projects\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
+      "projectUniqueName": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
       "projectName": "PiBot",
-      "projectPath": "C:\\Users\\Nicho\\Desktop\\Projects\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
-      "packagesPath": "C:\\Users\\Nicho\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nicho\\Desktop\\Projects\\Pi-Bot\\PiBot\\PiBot\\obj\\",
+      "projectPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\PiBot.csproj",
+      "packagesPath": "C:\\Users\\IainN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Nicho\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\IainN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -857,7 +857,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://www.myget.org/F/discord-net/api/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
@@ -875,7 +876,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -910,7 +911,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
