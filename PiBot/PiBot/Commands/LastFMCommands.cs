@@ -21,9 +21,8 @@ namespace PiBot.Commands
         {
             // http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=rj&api_key=YOUR_API_KEY&format=json
             // http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=&api_key=YOUR_API_KEY&format=json
-            
-            using var connection = getConnection();
 
+            using var connection = DatabaseHandler.getConnection();           
             using var checkUserExists = connection.CreateCommand();
             checkUserExists.CommandText = @"
                 SELECT last_fm_username
@@ -83,7 +82,7 @@ namespace PiBot.Commands
         public async Task SetLastFMUsername(string username)
         {
             // connect to the database (i should probably add a function for this)
-            var connection = getConnection();
+            var connection = DatabaseHandler.getConnection();
 
             using var checkFmUserameExists = connection.CreateCommand();
             checkFmUserameExists.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id";
@@ -125,7 +124,7 @@ namespace PiBot.Commands
         [Command("lastfm clear")]
         public async Task clearLastFmUsername()
         {
-            var connection = getConnection();
+            var connection = DatabaseHandler.getConnection();
 
             using var checkForName = connection.CreateCommand();
             checkForName.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id";
@@ -143,15 +142,6 @@ namespace PiBot.Commands
             await deleteName.ExecuteNonQueryAsync();
             await Context.Channel.SendMessageAsync($"Your last.fm username has been reset.");
             
-        }
-
-        public SqliteConnection getConnection()
-        {
-            // file path to database, should look into trying to host it on a server or something just to see if i can
-            string dbFile = $"Data source={Config.bot.databaseFilePath}";
-            var connection = new SqliteConnection(dbFile);
-            connection.Open();
-            return connection;
         }
     }
 }
