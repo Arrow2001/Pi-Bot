@@ -29,6 +29,7 @@ namespace PiBot
         {
             public string DiscordBotToken;
             public string LastFmApiKey;
+            public string databaseFilePath;
         }
     }
 }

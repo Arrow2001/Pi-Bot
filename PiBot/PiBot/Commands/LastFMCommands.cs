@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using PiBot.Handlers;
 
 namespace PiBot.Commands
 {
@@ -20,8 +21,8 @@ namespace PiBot.Commands
         {
             // http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=rj&api_key=YOUR_API_KEY&format=json
             // http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=&api_key=YOUR_API_KEY&format=json
-            var connection = new SqliteConnection("Data source=C:\\Users\\IainN\\userdata.db");
-            connection.Open();
+            
+            using var connection = getConnection();
 
             using var checkUserExists = connection.CreateCommand();
             checkUserExists.CommandText = @"
@@ -82,8 +83,7 @@ namespace PiBot.Commands
         public async Task SetLastFMUsername(string username)
         {
             // connect to the database (i should probably add a function for this)
-            var connection = new SqliteConnection("Data source=C:\\Users\\IainN\\userdata.db");
-            connection.Open();
+            var connection = getConnection();
 
             using var checkFmUserameExists = connection.CreateCommand();
             checkFmUserameExists.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id";
@@ -125,8 +125,7 @@ namespace PiBot.Commands
         [Command("lastfm clear")]
         public async Task clearLastFmUsername()
         {
-            var connection = new SqliteConnection("Data source=C:\\Users\\IainN\\userdata.db");
-            connection.Open(); // gotta be a better way for this stuff
+            var connection = getConnection();
 
             using var checkForName = connection.CreateCommand();
             checkForName.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id";
@@ -146,5 +145,13 @@ namespace PiBot.Commands
             
         }
 
+        public SqliteConnection getConnection()
+        {
+            // file path to database, should look into trying to host it on a server or something just to see if i can
+            string dbFile = $"Data source={Config.bot.databaseFilePath}";
+            var connection = new SqliteConnection(dbFile);
+            connection.Open();
+            return connection;
+        }
     }
 }
