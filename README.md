@@ -15,6 +15,7 @@ This is a wee personal project that I host on my Raspberry Pi.
 - Add more Last.FM commands that will display a user's top 10 songs/artists/albums (weekly, monthly, yearly or all time).
 - Utilise Last.FM's API so you can retrieve data about a specific song.
 - Encrypt the data that is stored in the database and decrypt when needed.
+- Convert JSON data into C# classes for cleaner and safer code.
 
 # System Architecture
 [Last.FM] -> (JSON) -> [C# Backend] -> (Discord.NET) -> [Discord UI]
