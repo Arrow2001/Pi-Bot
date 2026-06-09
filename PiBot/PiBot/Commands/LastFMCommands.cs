@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using PiBot.Handlers;
+using Discord.WebSocket;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace PiBot.Commands
 {
@@ -76,6 +79,22 @@ namespace PiBot.Commands
 
         }
 
+        // last.fm help
+        [Command("fm help")]
+        [Alias("helpfm", "fmhelp", "help fm")]
+        public async Task displayFmHelp()
+        {
+            EmbedBuilder bobTheBuilder2 = new EmbedBuilder();
+            bobTheBuilder2.Title = $"Last.FM Help Menu";
+            bobTheBuilder2.WithDescription($"1. `lastfm set [username]` - Sets and stores your last.fm username" +
+                $"\n2. `last.fm clear` - Removes your username from the bot." +
+                $"\n3. `fm` - Displays your current or most recent song." +
+                $"\n4. `fm arists [timeframe (7day, 1month, 3month, 6month, 1y, overall]` - Displays your top artists for the period selected." +
+                $"\n5. `fm help` - Displays this help menu."); // there will be a better way but idk how yet
+            bobTheBuilder2.WithColor(Color.Blue);
+            bobTheBuilder2.WithFooter($"Disclaimer: by inputting your last.fm username, you hereby agree to have your Discord ID, Discord Username and Last.FM username stored securely in the bot.\nYou have the right to access any data stored.\nYou have the right to be delete all data stored about you.");
+            await Context.Channel.SendMessageAsync("", false, bobTheBuilder2.Build());
+        }
         
         // set last.fm username
         [Command("lastfm set")]
@@ -142,6 +161,83 @@ namespace PiBot.Commands
             await deleteName.ExecuteNonQueryAsync();
             await Context.Channel.SendMessageAsync($"Your last.fm username has been reset.");
             
+        }
+
+        [Command("fm artists")]
+        public async Task getTopArtists(string timeframe, [Optional]SocketGuildUser targetuser)
+        {
+            if (targetuser == null)
+                targetuser = (SocketGuildUser)Context.User;
+
+            var connection = DatabaseHandler.getConnection();
+            using var checkforFM = connection.CreateCommand();
+            checkforFM.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id"; // calling it twice for the same thing, should make it a function instead
+            checkforFM.Parameters.AddWithValue("@id", targetuser.Id);
+            var checkingFmExists = await checkforFM.ExecuteScalarAsync();
+
+            StringBuilder topArtistsLink = new StringBuilder($"http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user={checkingFmExists}&api_key={Config.bot.LastFmApiKey}&format=json&period=");
+            // overall | 7day | 1month | 3month | 6month | 12month
+            switch (timeframe)
+            {
+                case "7day":
+                    topArtistsLink.Append("7day");
+                    break;
+                case "overall":
+                case "all":
+                    topArtistsLink.Append("overall");
+                    break;
+                case "1month":
+                case "1m":
+                    topArtistsLink.Append($"1month");
+                        break;
+                case "3month":
+                case "3m":
+                case "3 months":
+                case "3months":
+                    topArtistsLink.Append($"3month");
+                    break;
+                case "6month":
+                case "6m":
+                case "6 months":
+                case "6months":
+                    topArtistsLink.Append($"6month"); //hmm regex may work better here than typing each case, not sure
+                    break;
+                case "12month":
+                case "12m":
+                case "12 months":
+                case "12months":
+                case "1 year":
+                case "1year":
+                case "1y":
+                    topArtistsLink.Append($"12month");
+                    break;
+            }
+
+            if (checkingFmExists == null || string.IsNullOrEmpty(checkingFmExists.ToString()))
+            {
+                await Context.Channel.SendMessageAsync($"Please set up your last.fm in the bot by using `.lastfm set [username]`");
+                return;
+            } else
+            {
+                try
+                {
+                    string aristJson = await httpClient.GetStringAsync(topArtistsLink.ToString());
+                    dynamic artistInfo = JsonConvert.DeserializeObject(aristJson);
+                    EmbedBuilder topArtistEmbed = new EmbedBuilder();
+                    topArtistEmbed.Title = $"Top 10 {timeframe} Artists"; // gotta fix the timeframe to be readable on the embed
+
+                    StringBuilder topTenArtists = new StringBuilder();
+                    for (int i = 0; i < 10; i++)
+                    {
+                        topTenArtists.Append($"{i + 1}. {artistInfo.topartists.artist[i]. name} - {artistInfo.topartists.artist[i].playcount} plays\n");
+                    }
+                    topArtistEmbed.WithDescription(topTenArtists.ToString());
+                    topArtistEmbed.WithColor(Color.Blue);
+                    await Context.Channel.SendMessageAsync("", false, topArtistEmbed.Build());
+
+                } catch (Exception ex) { Console.WriteLine($"Error: {ex.ToString()}"); }
+            }
+
         }
     }
 }

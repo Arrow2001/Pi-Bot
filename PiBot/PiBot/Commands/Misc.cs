@@ -80,6 +80,7 @@ namespace PiBot.Commands
                 Console.WriteLine($"{DateTime.Now}: Deleting {Context.User.Username}'s data from the database");
                 await Context.Channel.SendMessageAsync($"Deleted userdata for {Context.User.Mention}");
                 Console.WriteLine($"{DateTime.Now}: {Context.User.Username}'s data has been deleted from the database.");
+                // plan on writing this into a text file
                 return;
             }
             catch (Exception ex)
