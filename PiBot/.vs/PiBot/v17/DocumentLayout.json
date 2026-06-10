@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\commands\\lastfmcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\commands\\misc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\commands\\misc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\handlers\\databasehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\handlers\\databasehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\handlers\\cryptographyhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\handlers\\cryptographyhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\commands\\misc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\commands\\misc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|solutionrelative:pibot\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA877548-7118-45A0-BF51-56F4FAB60189}|PiBot\\PiBot.csproj|c:\\users\\iainn\\onedrive\\desktop\\github\\pi-bot\\pibot\\pibot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,26 +42,26 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "CryptographyHandler.cs",
               "DocumentMoniker": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\CryptographyHandler.cs",
               "RelativeDocumentMoniker": "PiBot\\Handlers\\CryptographyHandler.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\CryptographyHandler.cs",
               "RelativeToolTip": "PiBot\\Handlers\\CryptographyHandler.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAgwDkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwDcAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-09T23:47:12.006Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "DatabaseHandler.cs",
               "DocumentMoniker": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\DatabaseHandler.cs",
               "RelativeDocumentMoniker": "PiBot\\Handlers\\DatabaseHandler.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\DatabaseHandler.cs",
               "RelativeToolTip": "PiBot\\Handlers\\DatabaseHandler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-07T20:23:27.384Z",
               "EditorCaption": ""
@@ -74,20 +74,20 @@
               "RelativeDocumentMoniker": "PiBot\\Commands\\LastFMCommands.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Commands\\LastFMCommands.cs",
               "RelativeToolTip": "PiBot\\Commands\\LastFMCommands.cs",
-              "ViewState": "AgIAAO8AAAAAAAAAAAAQwA8BAABVAAAAAAAAAA==",
+              "ViewState": "AgIAAEIBAAAAAAAAAAAuwFMBAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-03T20:32:51.188Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Misc.cs",
               "DocumentMoniker": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Commands\\Misc.cs",
               "RelativeDocumentMoniker": "PiBot\\Commands\\Misc.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Commands\\Misc.cs",
               "RelativeToolTip": "PiBot\\Commands\\Misc.cs",
-              "ViewState": "AgIAAGMAAAAAAAAAAAAmwHsAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAFMAAAAAAAAAAAA3wH8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T18:30:43.755Z",
               "EditorCaption": ""
@@ -100,13 +100,14 @@
               "RelativeDocumentMoniker": "PiBot\\Handlers\\EventHandler.cs",
               "ToolTip": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Handlers\\EventHandler.cs",
               "RelativeToolTip": "PiBot\\Handlers\\EventHandler.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAABQwDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T18:05:08.46Z"
+              "WhenOpened": "2026-03-27T18:05:08.46Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Config.cs",
               "DocumentMoniker": "C:\\Users\\IainN\\OneDrive\\Desktop\\Github\\Pi-Bot\\PiBot\\PiBot\\Config.cs",
               "RelativeDocumentMoniker": "PiBot\\Config.cs",

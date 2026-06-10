@@ -30,7 +30,7 @@ namespace PiBot.Handlers
                     {
                         sw.Write(data);
                     }
-                    return Convert.ToBase64String(ms.ToArray()); // still not sure on how this works
+                    return Convert.ToBase64String(ms.ToArray()); // still not sure on how all this works
                 }
             }
         }

@@ -10,13 +10,14 @@ using Microsoft.Data.Sqlite;
 using PiBot.Handlers;
 using Discord.WebSocket;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Marshalling;
+
 
 namespace PiBot.Commands
 {
     public class LastFMCommands : ModuleBase<SocketCommandContext>
     {
         private static readonly HttpClient httpClient = new HttpClient();
+        public byte[] masterkay = CryptographyHandler.DeriveAKey(Config.bot.password, Config.bot.saltKey); // saves repeating it in each cmd
 
         // check FM exists function for DRY principle
         private async Task<string> CheckFmUserExists(ulong discordID)
@@ -34,17 +35,27 @@ namespace PiBot.Commands
         [Command("fm")]
         public async Task DisplayCurrenSong()
         {
+
             // http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=rj&api_key=YOUR_API_KEY&format=json
             // http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=&api_key=YOUR_API_KEY&format=json
 
             string fmUser = await CheckFmUserExists(Context.User.Id);
+            //using System.Security.Cryptography.Aes aes = System.Security.Cryptography.Aes.Create();
+
+            using var connection = DatabaseHandler.getConnection();
+            using var command = connection.CreateCommand();
+            command.CommandText = @"SELECT fm_iv FROM users WHERE id = @id";
+            command.Parameters.AddWithValue("@id", Context.User.Id);
+            //var a = await command.ExecuteScalarAsync();
+            //byte[] iv = Convert.FromBase64String(a.ToString());
+            //string fmUsername = CryptographyHandler.DecryptData(fmUser, masterkay,iv);
 
             if (string.IsNullOrEmpty(fmUser))
             {
                 await Context.Channel.SendMessageAsync($"Please set up your last.fm account");
                 return;
             }
-
+            Console.WriteLine($"Original: {fmUser}\nDecrypted: {fmUser}");
             string recentTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={fmUser}&api_key={Config.bot.LastFmApiKey}&format=json";
             string rawJsonRecentTracks = await httpClient.GetStringAsync(recentTracksLink);
             dynamic recentTracksJson = JsonConvert.DeserializeObject(rawJsonRecentTracks);
@@ -59,18 +70,20 @@ namespace PiBot.Commands
                 footer = "Now Playing";
             }
             else { footer = "Most Recent Track"; }
-
+            //var colorThief = new ColorThief();
             EmbedBuilder bobTheBuilder = new EmbedBuilder();
             bobTheBuilder.WithAuthor(Context.User.Username, Context.User.GetAvatarUrl(), null);
             bobTheBuilder.AddField("Artist:", $"[{(string)recentTracksJson.recenttracks.track[0].artist["#text"]}]({"https://www.last.fm/music/" + (string)recentTracksJson.recenttracks.track[0].artist["#text"].ToString().Replace(" ", "+")})", true);
             bobTheBuilder.AddField("Track:", $"[{(string)recentTracksJson.recenttracks.track[0].name}]({(string)recentTracksJson.recenttracks.track[0].url})", true);
             bobTheBuilder.ThumbnailUrl = (string)recentTracksJson.recenttracks.track[0].image[3]["#text"];
-            bobTheBuilder.WithColor(Color.Blue); // might try to get ColourThief again and make the colour similar to that of the album cover
+            //bobTheBuilder.WithColor(); // might try to get ColourThief again and make the colour similar to that of the album cover
+            bobTheBuilder.WithColor(Color.Blue);
             bobTheBuilder.WithFooter($"{footer} | Total Scrobbles: {(string)userInfoJson.user.playcount}"); // should add a total amount of scrobbles
 
             await Context.Channel.SendMessageAsync("", false, bobTheBuilder.Build());
+            await Context.Channel.SendMessageAsync(recentTracksLink + "\n\n" + totalUserPlaycount);
         }
-        
+
 
 
         // last.fm help
@@ -89,7 +102,7 @@ namespace PiBot.Commands
             bobTheBuilder2.WithFooter($"Disclaimer: by inputting your last.fm username, you hereby agree to have your Discord ID, Discord Username and Last.FM username stored securely in the bot.\nYou have the right to access any data stored.\nYou have the right to be delete all data stored about you.");
             await Context.Channel.SendMessageAsync("", false, bobTheBuilder2.Build());
         }
-        
+
         // set last.fm username
         [Command("lastfm set")]
         public async Task SetLastFMUsername(string username)
@@ -103,17 +116,24 @@ namespace PiBot.Commands
             var existingUser = await checkFmUserameExists.ExecuteScalarAsync();
             if (existingUser == null || string.IsNullOrWhiteSpace(existingUser.ToString()))
             {
+                //using System.Security.Cryptography.Aes aes = System.Security.Cryptography.Aes.Create();
+                //byte[] ivKey = aes.IV;
                 using var command = connection.CreateCommand();
                 // rather messy all on one line, will fix it later.
                 command.CommandText = @"INSERT INTO users (id, name, last_fm_username) 
                                         VALUES (@id, @name, @last_fm_username) 
                                         ON CONFLICT(id) 
-                                        DO UPDATE 
-                                        SET last_fm_username = excluded.last_fm_username";
+                                        DO UPDATE SET
+                                            last_fm_username = excluded.last_fm_username";
 
-                command.Parameters.AddWithValue("@id", Context.User.Id); // error because it already exists
+                command.Parameters.AddWithValue("@id", Context.User.Id);
                 command.Parameters.AddWithValue("@name", Context.User.Username);
+                //string encryptedFmUsername = CryptographyHandler.EncryptData(username, masterkay, ivKey);
                 command.Parameters.AddWithValue("@last_fm_username", username);
+                //command.Parameters.AddWithValue("@fm_iv", Convert.ToBase64String(ivKey));
+
+                //Console.WriteLine($"Original: {username}\nEncrypted: {encryptedFmUsername}"); // for testing (very messy, needs to be refactored.)
+
                 await command.ExecuteScalarAsync();
                 await Context.Channel.SendMessageAsync($"Your last.fm username has been stored.");
             }
@@ -145,27 +165,27 @@ namespace PiBot.Commands
             var checkingName = await checkForName.ExecuteScalarAsync();
 
             if (checkingName == null && string.IsNullOrEmpty(checkingName.ToString()))
-            { 
+            {
                 await Context.Channel.SendMessageAsync($"You don't have a name set up.");
                 return;
-            } 
+            }
             using var deleteName = connection.CreateCommand();
             deleteName.CommandText = @"UPDATE users SET last_fm_username = NULL WHERE id = @id";
             deleteName.Parameters.AddWithValue("@id", Context.User.Id);
             await deleteName.ExecuteNonQueryAsync();
             await Context.Channel.SendMessageAsync($"Your last.fm username has been reset.");
-            
+
         }
 
         [Command("fm artists")]
         [Alias("ta", "top artists", "topartists")]
-        public async Task getTopArtists(SocketGuildUser targetuser = null, string timeframe = "7day")
+        public async Task getTopArtists(string timeframe = "7day", SocketGuildUser targetuser = null)
         {
             if (targetuser == null)
                 targetuser = (SocketGuildUser)Context.User;
 
             var checkingFmExists = await CheckFmUserExists(targetuser.Id);
-            
+
             StringBuilder topArtistsLink = new StringBuilder($"http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user={checkingFmExists}&api_key={Config.bot.LastFmApiKey}&format=json&period=");
             string timeframeForEmbed = "";
             // overall | 7day | 1month | 3month | 6month | 12month
@@ -184,7 +204,7 @@ namespace PiBot.Commands
                 case "1m":
                     topArtistsLink.Append($"1month");
                     timeframeForEmbed = "Monthly";
-                        break;
+                    break;
                 case "3month":
                 case "3m":
                 case "3 months":
@@ -215,7 +235,8 @@ namespace PiBot.Commands
             {
                 await Context.Channel.SendMessageAsync($"Please set up your last.fm in the bot by using `.lastfm set [username]`");
                 return;
-            } else
+            }
+            else
             {
                 try
                 {
@@ -233,7 +254,8 @@ namespace PiBot.Commands
                     topArtistEmbed.WithColor(Color.Blue);
                     await Context.Channel.SendMessageAsync("", false, topArtistEmbed.Build());
 
-                } catch (Exception ex) { Console.WriteLine($"Error: {ex.ToString()}"); }
+                }
+                catch (Exception ex) { Console.WriteLine($"Error: {ex.ToString()}"); }
             }
 
         }
@@ -241,7 +263,7 @@ namespace PiBot.Commands
         // get the top tracks
         [Command("top tracks")]
         [Alias("tt")]
-        public async Task GetTopTracks(SocketGuildUser targetUser = null, string timeframe = "7day")
+        public async Task GetTopTracks(string timeframe = "7day", SocketGuildUser targetUser = null)
         {
             if (targetUser == null)
                 targetUser = (SocketGuildUser)Context.User;
@@ -252,9 +274,23 @@ namespace PiBot.Commands
                 await Context.Channel.SendMessageAsync($"Please set up your last.fm in the bot. Use `.fm help` for more.");
                 return;
             }
+
+            switch (timeframe)
+            {
+                case "1w":
+                    timeframe = "7day";
+                    break;
+                case "1m":
+                    timeframe = "1month";
+                    break;
+                case "1y":
+                    timeframe = "12month";
+                    break;
+            }
+
             string fmUser = await CheckFmUserExists(targetUser.Id);
-            // http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=iain2001&api_key=YOUR_API_KEY&format=json
             string topTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user={fmUser}&api_key={Config.bot.LastFmApiKey}&period={timeframe}&format=json";
+
             StringBuilder topSongsString = new StringBuilder();
             try
             {
@@ -263,17 +299,49 @@ namespace PiBot.Commands
 
                 for (int i = 0; i < 10; i++)
                 {
-                    topSongsString.Append($"{i+1}. {songJsonRaw.toptracks.track[i].artist.name} - {songJsonRaw.toptracks.track[i].name}: {songJsonRaw.toptracks.track[i].playcount}");
+                    topSongsString.Append($"{i + 1}. [{songJsonRaw.toptracks.track[i].artist.name}]({songJsonRaw.toptracks.track[i].artist.url}) - [{songJsonRaw.toptracks.track[i].name}]({songJsonRaw.toptracks.track[i].url}): {songJsonRaw.toptracks.track[i].playcount} plays\n");
                 }
                 EmbedBuilder songBuilder = new EmbedBuilder();
-                songBuilder.WithTitle($"Top songs");
-                songBuilder.WithDescription(songBuilder.ToString());
+                songBuilder.WithTitle($"Top Tracks | {timeframe}");
+                songBuilder.WithDescription(topSongsString.ToString());
                 songBuilder.WithColor(Color.Blue);
                 await Context.Channel.SendMessageAsync("", false, songBuilder.Build());
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        [Command("track info")]
+        [Alias("ti")]
+        public async Task GetTrackInfo([Remainder] string songnameAndArtist)
+        {
+            if (!songnameAndArtist.Contains("|"))
+            {
+                await Context.Channel.SendMessageAsync($"You need to phrase it like `..ti songName | songArtist");
+                return;
+            }
+
+            string[] songNameandArtistSorted = songnameAndArtist.Split("|", StringSplitOptions.TrimEntries);
+            string songName = songNameandArtistSorted[0];
+            string songArtist = songNameandArtistSorted[1];
+
+            StringBuilder trackInfoLink = new StringBuilder($"http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={Config.bot.LastFmApiKey}&artist={songArtist.Replace(" ", "+")}&track={songName.Replace(" ", "+")}&format=json");
+
+            string trackInfoSongJson = await httpClient.GetStringAsync(trackInfoLink.ToString());
+            dynamic jsonRaw = JsonConvert.DeserializeObject(trackInfoSongJson);
+
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.WithTitle($"Track Infortmation");
+            embedBuilder.Description = $"Song: {jsonRaw.track.name}\n" +
+                $"Artist: {jsonRaw.track.artist.name}\n" +
+                $"Album: {jsonRaw.track.album.title}\n\n" +
+                $"Summary: {jsonRaw.track.wiki.summary}";
+            embedBuilder.WithThumbnailUrl($"{jsonRaw.track.album.image[3]["#text"]}");
+            embedBuilder.WithColor(Color.Blue);
+
+            await Context.Channel.SendMessageAsync("", false, embedBuilder.Build());
         }
     }
 }

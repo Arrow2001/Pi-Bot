@@ -151,3 +151,9 @@ C:\Users\Nicho\Desktop\Projects\Pi-Bot\PiBot\PiBot\obj\Debug\net8.0\refint\PiBot
 C:\Users\Nicho\Desktop\Projects\Pi-Bot\PiBot\PiBot\obj\Debug\net8.0\PiBot.pdb
 C:\Users\Nicho\Desktop\Projects\Pi-Bot\PiBot\PiBot\obj\Debug\net8.0\PiBot.genruntimeconfig.cache
 C:\Users\Nicho\Desktop\Projects\Pi-Bot\PiBot\PiBot\obj\Debug\net8.0\ref\PiBot.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\ColorThief.Netstandard.v20.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\System.Drawing.Common.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\System.Private.Windows.Core.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\System.Private.Windows.GdiPlus.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
