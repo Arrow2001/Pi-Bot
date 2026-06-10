@@ -51,7 +51,6 @@ namespace PiBot.Handlers
             {
                 Console.WriteLine($"New DM from {msg.Author.Username.ToString()}: {msg.Content.ToString()}");
                 var c = context.Client.GetGuild(632771528022425612).GetChannel(1272150974961553479) as SocketTextChannel;
-                await c.SendMessageAsync($"<@470033984575897600> New DM from {msg.Author.Mention} (ID: {msg.Author.Id}):\n\nMessage: {msg.Content}");
             }
         }
     }

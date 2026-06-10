@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using PiBot.Handlers;
+using System.Security.Cryptography;
 
 namespace PiBot.Commands
 {
@@ -61,7 +62,22 @@ namespace PiBot.Commands
             getData.Parameters.AddWithValue("@id", Context.User.Id);
 
             var userData = await getData.ExecuteNonQueryAsync(); // should look up the reader documentation
-            await Context.Channel.SendMessageAsync($"Data stored on you: {userData.ToString()}");
+            using var reader = await getData.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                StringBuilder stringBuilder = new StringBuilder("Your Stored Data:\n\n");
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    string columName = reader.GetName(i);
+                    object value = reader.GetValue(i);
+                    stringBuilder.Append($"{columName}: {value}\n"); // should add in a way to handle null values just in case
+                }
+                await Context.Channel.SendMessageAsync(stringBuilder.ToString()); // needs to be a dm to be secure
+            } else
+            {
+                await Context.Channel.SendMessageAsync($"No data is stored for: {Context.User.Mention}");
+            }
         }
 
         [Command("delete userdata")]
@@ -80,13 +96,32 @@ namespace PiBot.Commands
                 Console.WriteLine($"{DateTime.Now}: Deleting {Context.User.Username}'s data from the database");
                 await Context.Channel.SendMessageAsync($"Deleted userdata for {Context.User.Mention}");
                 Console.WriteLine($"{DateTime.Now}: {Context.User.Username}'s data has been deleted from the database.");
-                // plan on writing this into a text file
+                // plan on writing this into a text file, with username or id hashed
                 return;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+        [Command("test")]
+        public  async Task testEncryption([Remainder]string data)
+        {
+            byte[] masterkey = CryptographyHandler.DeriveAKey(Config.bot.password, Config.bot.saltKey);
+            using Aes aes = Aes.Create();
+            byte[] testIV = aes.IV;
+
+            string encryptedText = CryptographyHandler.EncryptData(data, masterkey, testIV);
+            Console.WriteLine($"Original: {data}\nEncrypted: {encryptedText}");
+            try
+            {
+                string decryptedText = CryptographyHandler.DecryptData(encryptedText, masterkey, testIV);
+                Console.WriteLine($"Decrypted fromL: {encryptedText} to {decryptedText}");
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }            
         }
     }
 }

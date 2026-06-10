@@ -18,6 +18,18 @@ namespace PiBot.Commands
     {
         private static readonly HttpClient httpClient = new HttpClient();
 
+        // check FM exists function for DRY principle
+        private async Task<string> CheckFmUserExists(ulong discordID)
+        {
+            using var connection = DatabaseHandler.getConnection();
+            using var command = connection.CreateCommand();
+            command.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id";
+            command.Parameters.AddWithValue("@id", discordID);
+            var result = await command.ExecuteScalarAsync(); // still confused about the difference between certain sql asyncs
+            return result?.ToString();
+
+        }
+
         // gets the current or most recently played song (I should configure a database to store usernames)
         [Command("fm")]
         public async Task DisplayCurrenSong()
@@ -25,59 +37,41 @@ namespace PiBot.Commands
             // http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=rj&api_key=YOUR_API_KEY&format=json
             // http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=&api_key=YOUR_API_KEY&format=json
 
-            using var connection = DatabaseHandler.getConnection();           
-            using var checkUserExists = connection.CreateCommand();
-            checkUserExists.CommandText = @"
-                SELECT last_fm_username
-                FROM users
-                WHERE id = @id
-            ";
-            checkUserExists.Parameters.AddWithValue("@id", Context.User.Id);
-            var existingUser = await checkUserExists.ExecuteScalarAsync();
+            string fmUser = await CheckFmUserExists(Context.User.Id);
 
-            if (existingUser == null || string.IsNullOrEmpty(existingUser.ToString()))
+            if (string.IsNullOrEmpty(fmUser))
             {
                 await Context.Channel.SendMessageAsync($"Please set up your last.fm account");
                 return;
             }
-            else
+
+            string recentTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={fmUser}&api_key={Config.bot.LastFmApiKey}&format=json";
+            string rawJsonRecentTracks = await httpClient.GetStringAsync(recentTracksLink);
+            dynamic recentTracksJson = JsonConvert.DeserializeObject(rawJsonRecentTracks);
+
+            string totalUserPlaycount = $"http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user={fmUser}&api_key={Config.bot.LastFmApiKey}&format=json";
+            string rawUserInfoJson = await httpClient.GetStringAsync(totalUserPlaycount);
+            dynamic userInfoJson = JsonConvert.DeserializeObject(rawUserInfoJson);
+
+            string footer;
+            if (recentTracksJson.recenttracks.track[0]["@attr"] != null)
             {
-                using var command = connection.CreateCommand();
-                command.CommandText = @"
-                SELECT last_fm_username
-                FROM users
-                WHERE id = @id
-            ";
-                command.Parameters.AddWithValue("@id", Context.User.Id);
-                var fmuser = await command.ExecuteScalarAsync();
-
-                string recentTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={fmuser}&api_key={Config.bot.LastFmApiKey}&format=json";
-                string rawJsonRecentTracks = await httpClient.GetStringAsync(recentTracksLink);
-                dynamic recentTracksJson = JsonConvert.DeserializeObject(rawJsonRecentTracks);
-
-                string totalUserPlaycount = $"http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user={fmuser}&api_key={Config.bot.LastFmApiKey}&format=json";
-                string rawUserInfoJson = await httpClient.GetStringAsync(totalUserPlaycount);
-                dynamic userInfoJson = JsonConvert.DeserializeObject(rawUserInfoJson);
-
-                string footer;
-                if (recentTracksJson.recenttracks.track[0]["@attr"] != null)
-                {
-                    footer = "Now Playing";
-                }
-                else { footer = "Most Recent Track"; }
-
-                EmbedBuilder bobTheBuilder = new EmbedBuilder();
-                bobTheBuilder.WithAuthor(Context.User.Username, Context.User.GetAvatarUrl(), null);
-                bobTheBuilder.AddField("Artist:", $"[{(string)recentTracksJson.recenttracks.track[0].artist["#text"]}]({"https://www.last.fm/music/" + (string)recentTracksJson.recenttracks.track[0].artist["#text"].ToString().Replace(" ", "+")})", true);
-                bobTheBuilder.AddField("Track:", $"[{(string)recentTracksJson.recenttracks.track[0].name}]({(string)recentTracksJson.recenttracks.track[0].url})", true);
-                bobTheBuilder.ThumbnailUrl = (string)recentTracksJson.recenttracks.track[0].image[3]["#text"];
-                bobTheBuilder.WithColor(Color.Blue); // might try to get ColourThief again and make the colour similar to that of the album cover
-                bobTheBuilder.WithFooter($"{footer} | Total Scrobbles: {(string)userInfoJson.user.playcount}"); // should add a total amount of scrobbles
-
-                await Context.Channel.SendMessageAsync("", false, bobTheBuilder.Build());
+                footer = "Now Playing";
             }
+            else { footer = "Most Recent Track"; }
 
+            EmbedBuilder bobTheBuilder = new EmbedBuilder();
+            bobTheBuilder.WithAuthor(Context.User.Username, Context.User.GetAvatarUrl(), null);
+            bobTheBuilder.AddField("Artist:", $"[{(string)recentTracksJson.recenttracks.track[0].artist["#text"]}]({"https://www.last.fm/music/" + (string)recentTracksJson.recenttracks.track[0].artist["#text"].ToString().Replace(" ", "+")})", true);
+            bobTheBuilder.AddField("Track:", $"[{(string)recentTracksJson.recenttracks.track[0].name}]({(string)recentTracksJson.recenttracks.track[0].url})", true);
+            bobTheBuilder.ThumbnailUrl = (string)recentTracksJson.recenttracks.track[0].image[3]["#text"];
+            bobTheBuilder.WithColor(Color.Blue); // might try to get ColourThief again and make the colour similar to that of the album cover
+            bobTheBuilder.WithFooter($"{footer} | Total Scrobbles: {(string)userInfoJson.user.playcount}"); // should add a total amount of scrobbles
+
+            await Context.Channel.SendMessageAsync("", false, bobTheBuilder.Build());
         }
+        
+
 
         // last.fm help
         [Command("fm help")]
@@ -164,43 +158,46 @@ namespace PiBot.Commands
         }
 
         [Command("fm artists")]
-        public async Task getTopArtists(string timeframe, [Optional]SocketGuildUser targetuser)
+        [Alias("ta", "top artists", "topartists")]
+        public async Task getTopArtists(SocketGuildUser targetuser = null, string timeframe = "7day")
         {
             if (targetuser == null)
                 targetuser = (SocketGuildUser)Context.User;
 
-            var connection = DatabaseHandler.getConnection();
-            using var checkforFM = connection.CreateCommand();
-            checkforFM.CommandText = @"SELECT last_fm_username FROM users WHERE id = @id"; // calling it twice for the same thing, should make it a function instead
-            checkforFM.Parameters.AddWithValue("@id", targetuser.Id);
-            var checkingFmExists = await checkforFM.ExecuteScalarAsync();
-
+            var checkingFmExists = await CheckFmUserExists(targetuser.Id);
+            
             StringBuilder topArtistsLink = new StringBuilder($"http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user={checkingFmExists}&api_key={Config.bot.LastFmApiKey}&format=json&period=");
+            string timeframeForEmbed = "";
             // overall | 7day | 1month | 3month | 6month | 12month
             switch (timeframe)
             {
                 case "7day":
                     topArtistsLink.Append("7day");
+                    timeframeForEmbed = "Weekly";
                     break;
                 case "overall":
                 case "all":
                     topArtistsLink.Append("overall");
+                    timeframeForEmbed = "All-time";
                     break;
                 case "1month":
                 case "1m":
                     topArtistsLink.Append($"1month");
+                    timeframeForEmbed = "Monthly";
                         break;
                 case "3month":
                 case "3m":
                 case "3 months":
                 case "3months":
                     topArtistsLink.Append($"3month");
+                    timeframeForEmbed = "Quarterly";
                     break;
                 case "6month":
                 case "6m":
                 case "6 months":
                 case "6months":
                     topArtistsLink.Append($"6month"); //hmm regex may work better here than typing each case, not sure
+                    timeframeForEmbed = "Half-yearly";
                     break;
                 case "12month":
                 case "12m":
@@ -210,6 +207,7 @@ namespace PiBot.Commands
                 case "1year":
                 case "1y":
                     topArtistsLink.Append($"12month");
+                    timeframeForEmbed = "Yearly";
                     break;
             }
 
@@ -224,12 +222,12 @@ namespace PiBot.Commands
                     string aristJson = await httpClient.GetStringAsync(topArtistsLink.ToString());
                     dynamic artistInfo = JsonConvert.DeserializeObject(aristJson);
                     EmbedBuilder topArtistEmbed = new EmbedBuilder();
-                    topArtistEmbed.Title = $"Top 10 {timeframe} Artists"; // gotta fix the timeframe to be readable on the embed
+                    topArtistEmbed.Title = $"Top 10 {timeframeForEmbed} Artists"; // gotta fix the timeframe to be readable on the embed
 
                     StringBuilder topTenArtists = new StringBuilder();
                     for (int i = 0; i < 10; i++)
                     {
-                        topTenArtists.Append($"{i + 1}. {artistInfo.topartists.artist[i]. name} - {artistInfo.topartists.artist[i].playcount} plays\n");
+                        topTenArtists.Append($"{i + 1}. [{artistInfo.topartists.artist[i].name}]({artistInfo.topartists.artist[i].url}) - {artistInfo.topartists.artist[i].playcount} plays\n");
                     }
                     topArtistEmbed.WithDescription(topTenArtists.ToString());
                     topArtistEmbed.WithColor(Color.Blue);
@@ -238,6 +236,44 @@ namespace PiBot.Commands
                 } catch (Exception ex) { Console.WriteLine($"Error: {ex.ToString()}"); }
             }
 
+        }
+
+        // get the top tracks
+        [Command("top tracks")]
+        [Alias("tt")]
+        public async Task GetTopTracks(SocketGuildUser targetUser = null, string timeframe = "7day")
+        {
+            if (targetUser == null)
+                targetUser = (SocketGuildUser)Context.User;
+
+            var checkFmexists = CheckFmUserExists(targetUser.Id);
+            if (checkFmexists == null || string.IsNullOrEmpty(checkFmexists.ToString()))
+            {
+                await Context.Channel.SendMessageAsync($"Please set up your last.fm in the bot. Use `.fm help` for more.");
+                return;
+            }
+            string fmUser = await CheckFmUserExists(targetUser.Id);
+            // http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=iain2001&api_key=YOUR_API_KEY&format=json
+            string topTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user={fmUser}&api_key={Config.bot.LastFmApiKey}&period={timeframe}&format=json";
+            StringBuilder topSongsString = new StringBuilder();
+            try
+            {
+                string songJson = await httpClient.GetStringAsync(topTracksLink);
+                dynamic songJsonRaw = JsonConvert.DeserializeObject(songJson);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    topSongsString.Append($"{i+1}. {songJsonRaw.toptracks.track[i].artist.name} - {songJsonRaw.toptracks.track[i].name}: {songJsonRaw.toptracks.track[i].playcount}");
+                }
+                EmbedBuilder songBuilder = new EmbedBuilder();
+                songBuilder.WithTitle($"Top songs");
+                songBuilder.WithDescription(songBuilder.ToString());
+                songBuilder.WithColor(Color.Blue);
+                await Context.Channel.SendMessageAsync("", false, songBuilder.Build());
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
