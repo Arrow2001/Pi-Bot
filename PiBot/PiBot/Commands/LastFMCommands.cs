@@ -10,6 +10,7 @@ using Microsoft.Data.Sqlite;
 using PiBot.Handlers;
 using Discord.WebSocket;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 
 namespace PiBot.Commands
@@ -55,7 +56,7 @@ namespace PiBot.Commands
                 await Context.Channel.SendMessageAsync($"Please set up your last.fm account");
                 return;
             }
-            Console.WriteLine($"Original: {fmUser}\nDecrypted: {fmUser}");
+            //Console.WriteLine($"Original: {fmUser}\nDecrypted: {fmUser}");
             string recentTracksLink = $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={fmUser}&api_key={Config.bot.LastFmApiKey}&format=json";
             string rawJsonRecentTracks = await httpClient.GetStringAsync(recentTracksLink);
             dynamic recentTracksJson = JsonConvert.DeserializeObject(rawJsonRecentTracks);
@@ -81,7 +82,6 @@ namespace PiBot.Commands
             bobTheBuilder.WithFooter($"{footer} | Total Scrobbles: {(string)userInfoJson.user.playcount}"); // should add a total amount of scrobbles
 
             await Context.Channel.SendMessageAsync("", false, bobTheBuilder.Build());
-            await Context.Channel.SendMessageAsync(recentTracksLink + "\n\n" + totalUserPlaycount);
         }
 
 
@@ -332,16 +332,19 @@ namespace PiBot.Commands
             string trackInfoSongJson = await httpClient.GetStringAsync(trackInfoLink.ToString());
             dynamic jsonRaw = JsonConvert.DeserializeObject(trackInfoSongJson);
 
+            string sum = jsonRaw.track.wiki.summary;
+            string summary = Regex.Replace(sum, @"\s*<a\s+href=""[^""]*"">Read more on Last\.fm</a>\.?", "", RegexOptions.IgnoreCase); // I need to look up the doc
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.WithTitle($"Track Infortmation");
             embedBuilder.Description = $"Song: {jsonRaw.track.name}\n" +
                 $"Artist: {jsonRaw.track.artist.name}\n" +
                 $"Album: {jsonRaw.track.album.title}\n\n" +
-                $"Summary: {jsonRaw.track.wiki.summary}";
+                $"Summary: {summary}";
             embedBuilder.WithThumbnailUrl($"{jsonRaw.track.album.image[3]["#text"]}");
             embedBuilder.WithColor(Color.Blue);
 
             await Context.Channel.SendMessageAsync("", false, embedBuilder.Build());
+            await Context.Channel.SendMessageAsync(trackInfoLink.ToString());
         }
     }
 }

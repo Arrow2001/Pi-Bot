@@ -29,7 +29,15 @@ namespace PiBot.Commands
         [Command("reboot")]
         public async Task KillSwitch()
         {
-            Process.Start("sudo", "reboot");
+            if (Context.User.Id != 470033984575897600)
+            {
+                await Context.Channel.SendMessageAsync($"You are not authorised to use that command.");
+                return;
+            }
+            else
+            {
+                Process.Start("sudo", "reboot");
+            }
         }
 
         [Command("stats")]
@@ -43,8 +51,8 @@ namespace PiBot.Commands
             {
                 if (line.ToString().Contains("MemTotal"))
                 {
-                    memoryUsage = line.ToString();
-                    await Context.Channel.SendMessageAsync($"Total Memory: {memoryUsage}"); // returns the full line, need to trim it to just the numbers, possibly a function to calculate kb,mb,gb
+                    memoryUsage = line.ToString().Replace("MemTotal", "Total Memory");
+                    await Context.Channel.SendMessageAsync($"{memoryUsage}"); // returns the full line, need to trim it to just the numbers, possibly a function to calculate kb,mb,gb
                     break;
                 }
             }
