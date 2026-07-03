@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PiBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0dd19b83d323c82cbf0358c90e7a198ac9da9f19")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b36af6ffef5f7bf751914dfd7c12053a5df09dae")]
 [assembly: System.Reflection.AssemblyProductAttribute("PiBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PiBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

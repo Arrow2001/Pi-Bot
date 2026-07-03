@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Fergun.Interactive;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PiBot
 {
@@ -28,6 +30,11 @@ namespace PiBot
                | GatewayIntents.MessageContent
                | GatewayIntents.DirectMessages
             });
+
+            services = new ServiceCollection()
+                .AddSingleton(_client)
+                .AddSingleton<InteractiveService>()
+                .BuildServiceProvider();
 
             _client.Log += Log;
             await _client.LoginAsync(TokenType.Bot, Config.bot.DiscordBotToken);

@@ -157,3 +157,5 @@ C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\Syste
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\System.Private.Windows.Core.dll
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\System.Private.Windows.GdiPlus.dll
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\Fergun.Interactive.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll

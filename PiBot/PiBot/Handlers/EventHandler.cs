@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Fergun.Interactive;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace PiBot.Handlers
         public async Task InitialiseAsync(DiscordSocketClient client)
         {
             _client = client;
-            _service = new CommandService();
+            _service = new CommandService(new CommandServiceConfig { DefaultRunMode = RunMode.Async});
             await _service.AddModulesAsync(Assembly.GetEntryAssembly(), serviceProvider);
             _client.MessageReceived += HandleCommandAsync;
             _service.Log += Log;

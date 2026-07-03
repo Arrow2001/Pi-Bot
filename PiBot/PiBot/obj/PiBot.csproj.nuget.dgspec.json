@@ -55,9 +55,17 @@
               "target": "Package",
               "version": "[3.19.1, )"
             },
+            "Fergun.Interactive": {
+              "target": "Package",
+              "version": "[1.9.2, )"
+            },
             "Microsoft.Data.Sqlite": {
               "target": "Package",
               "version": "[11.0.0-preview.4.26230.115, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0-preview.5.26302.115, )"
             },
             "System.Device.Gpio": {
               "target": "Package",

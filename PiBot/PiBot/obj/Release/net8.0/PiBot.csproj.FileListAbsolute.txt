@@ -94,3 +94,5 @@ C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\obj\Release\net8.0\ref
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\obj\Release\net8.0\PiBot.pdb
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\obj\Release\net8.0\PiBot.genruntimeconfig.cache
 C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\obj\Release\net8.0\ref\PiBot.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Release\net8.0\Fergun.Interactive.dll
+C:\Users\IainN\OneDrive\Desktop\Github\Pi-Bot\PiBot\PiBot\bin\Release\net8.0\Microsoft.Extensions.DependencyInjection.dll
