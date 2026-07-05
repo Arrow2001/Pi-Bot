@@ -35,9 +35,12 @@ namespace PiBot.Commands
 
             foreach (var driver in f1DriverContent)
             {
+                string hex = driver.team_colour.ToString();
+                var TeamColour = new Discord.Color(Convert.ToUInt32(hex, 16));
                 driverPageList.Add(new PageBuilder()
                     .WithTitle(driver.full_name.ToString().ToUpper())
                     .WithDescription($"**Driver Number:** {driver.driver_number.ToString()}\n**Team:** {driver.team_name.ToString()}")
+                    .WithColor(TeamColour)
                     .WithThumbnailUrl(driver.headshot_url.ToString()));
             }
 
@@ -49,27 +52,6 @@ namespace PiBot.Commands
 
             await _service.SendPaginatorAsync(paginator, Context.Channel, TimeSpan.FromMinutes(10));
         }
-
-        /*[Command("grid")]
-        public async Task StartingGrid()
-        {
-            string startingGridLink = await formulaOneClient.GetStringAsync("https://api.openf1.org/v1/starting_grid?session_key=latest");
-            dynamic startingGrid = JsonConvert.DeserializeObject(startingGridLink);
-            string currentDriverGrid = await formulaOneClient.GetStringAsync("https://api.openf1.org/v1/drivers?session_key=latest");
-            dynamic f1DriverContent = JsonConvert.DeserializeObject(currentDriverGrid);
-            int i = 0;
-            string driverName = "";
-            foreach (var driverNumber in startingGrid)
-            {
-                if (driverNumber.driver_number == f1DriverContent[0].driver_number)
-                {
-                    driverName = f1DriverContent[i].full_name.ToString();
-                }
-                i++;
-                Console.WriteLine($"{driverNumber.driver_number.ToString()} = {driverName}\n");
-            }
-
-        }*/
 
         [Command("track weather")]
         public async Task GetLatestTrackWeather()
